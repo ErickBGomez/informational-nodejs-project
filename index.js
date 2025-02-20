@@ -1,5 +1,6 @@
 const http = require("http");
 const fs = require("fs");
+const { loadHtml } = require("./loadHtml");
 
 const server = http.createServer();
 
@@ -10,7 +11,7 @@ server.on("request", (req, res) => {
 
   try {
     status = 200;
-    content = fs.readFileSync("./html/index.html");
+    content = loadHtml(req.url);
   } catch (e) {
     status = 500;
     content = "Internal server error!";
