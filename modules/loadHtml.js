@@ -11,8 +11,13 @@ const loadHtml = (query) => {
 
     // If file is not found, return 404
     if (e.code === "ENOENT") {
-      const content = fs.readFileSync("./html/404.html");
-      return { status: 404, content };
+      try {
+        const content = fs.readFileSync("./html/404.html");
+        return { status: 404, content };
+      } catch (er) {
+        // If 404 html does not found, send a generic 404 message
+        return { status: 404, content: "Page not found!" };
+      }
     }
 
     // In case of any other error, return 500
