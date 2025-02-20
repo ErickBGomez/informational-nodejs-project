@@ -1,5 +1,6 @@
 const http = require("http");
-const { loadHtml } = require("./modules/loadHtml");
+const process = require("process");
+const loadHtml = require("./modules/loadHtml");
 
 const server = http.createServer();
 
@@ -18,4 +19,10 @@ server.on("request", (req, res) => {
 
 server.listen(8080, () => {
   console.log("Server initialized!");
+
+  // Handle exit signal
+  process.on("SIGINT", () => {
+    console.log("\nServer stopped!");
+    process.exit();
+  });
 });

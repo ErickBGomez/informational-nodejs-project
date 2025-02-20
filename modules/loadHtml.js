@@ -26,4 +26,4 @@ const loadHtml = (query) => {
   }
 };
 
-module.exports = { loadHtml };
+module.exports = loadHtml;
