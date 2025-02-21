@@ -42,6 +42,14 @@ app.get(
 );
 
 // Open server
-app.listen(PORT, () => {
-  console.log("Server initialized!");
+const server = app.listen(PORT, () => {
+  console.log(`Server initialized! Listening on port: ${PORT}`);
+});
+
+process.on("SIGINT", () => {
+  console.log("\nClosing server...");
+
+  server.close(() => {
+    console.log("Server closed!");
+  });
 });
