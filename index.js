@@ -46,6 +46,7 @@ const server = app.listen(PORT, () => {
   console.log(`Server initialized! Listening on port: ${PORT}`);
 });
 
+// Close server when the process is interrupted (Ctrl + C, for example)
 process.on("SIGINT", () => {
   console.log("\nClosing server...");
 
