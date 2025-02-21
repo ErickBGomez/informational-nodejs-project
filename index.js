@@ -27,36 +27,45 @@ const loadHtml = require("./modules/loadHtml");
 //   });
 // });
 
+const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
+const notFoundMiddleware = require("./middleware/notFound");
+const serverErrorMiddleware = require("./middleware/serverError");
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
+
 const fileOptions = {
-  root: __dirname,
+  root: path.join(__dirname, "html"),
 };
 
-app.get("/", (req, res, next) => {
-  res.sendFile("./html/index.html", fileOptions);
-});
+app.get(
+  "/",
+  (req, res, next) => {
+    res.sendFile("index.html", fileOptions, (e) => {
+      if (e) next();
+    });
+  },
+  notFoundMiddleware,
+  serverErrorMiddleware
+);
 
-app.get("/:name", (req, res, next) => {
-  const options = {
-    root: __dirname,
-  };
+app.get(
+  "/:name",
+  (req, res, next) => {
+    const { name } = req.params;
+    console.log(name);
 
-  const { name } = req.params;
-
-  res.sendFile(`./html/${name}.html`, options, (e) => {
-    if (e)
-      res.sendFile("./html/404.html", options, (er) => {
-        if (er) res.send(500, "500 - Internal server error");
-      });
-    else console.log("sent");
-  });
-});
+    res.sendFile(`${name}.html`, fileOptions, (e) => {
+      if (e) next();
+    });
+  },
+  notFoundMiddleware,
+  serverErrorMiddleware
+);
 
 app.listen(PORT, () => {
   console.log("Server initialized!");
