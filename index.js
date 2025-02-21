@@ -34,13 +34,28 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
+const fileOptions = {
+  root: __dirname,
+};
 
 app.get("/", (req, res, next) => {
+  res.sendFile("./html/index.html", fileOptions);
+});
+
+app.get("/:name", (req, res, next) => {
   const options = {
     root: __dirname,
   };
 
-  res.sendFile("./html/index.html", options);
+  const { name } = req.params;
+
+  res.sendFile(`./html/${name}.html`, options, (e) => {
+    if (e)
+      res.sendFile("./html/404.html", options, (er) => {
+        if (er) res.send(500, "500 - Internal server error");
+      });
+    else console.log("sent");
+  });
 });
 
 app.listen(PORT, () => {
